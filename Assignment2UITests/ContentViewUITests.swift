@@ -98,27 +98,19 @@ final class ContentViewUITests: XCTestCase {
         // Fill out the form
         let firstNameField = app.textFields["First Name"]
         firstNameField.tap()
-//        firstNameField.press(forDuration: 1.1)
         firstNameField.typeText(firstName)
-//        app.keyboards.buttons["Return"].tap()
         
         let lastNameField = app.textFields["Last Name"]
         lastNameField.tap()
-//        lastNameField.press(forDuration: 1.1)
         lastNameField.typeText(lastName)
-//        app.keyboards.buttons["Return"].tap()
         
         let heightField = app.textFields["Height (cm)"]
         heightField.tap()
-//        heightField.press(forDuration: 1.1)
         heightField.typeText("170")
-//        app.keyboards.buttons["Return"].tap()
         
         let weightField = app.textFields["Weight (kg)"]
         weightField.tap()
-//        weightField.press(forDuration: 1.1)
         weightField.typeText("70")
-//        app.keyboards.buttons["Return"].tap()
         
         // Save patient
         app.buttons["Save"].tap()
