@@ -1,3 +1,10 @@
+//
+//  ContentViewUITests.swift
+//  ContentViewUITests
+//
+//  Created by Miguel Fuentes on 1/13/25.
+//
+
 import XCTest
 @testable import Assignment2
 
@@ -10,19 +17,27 @@ final class ContentViewUITests: XCTestCase {
         app.launch()
     }
     
+    // Helper function to wait for element existence
+    private func waitForElement(_ element: XCUIElement, timeout: TimeInterval = 5) -> Bool {
+        let predicate = NSPredicate(format: "exists == true")
+        let expectation = expectation(for: predicate, evaluatedWith: element)
+        return XCTWaiter().wait(for: [expectation], timeout: timeout) == .completed
+    }
+    
     // MARK: - ContentView Tests
     
     func testContentViewInitialState() throws {
-        // Verify navigation title
-        XCTAssertTrue(app.navigationBars["Patients"].exists)
+        // Wait for and verify navigation title
+        let navBar = app.navigationBars["Patients"]
+        XCTAssertTrue(waitForElement(navBar))
         
-        // Verify search bar exists
+        // Wait for and verify search bar
         let searchField = app.textFields["Search"]
-        XCTAssertTrue(searchField.exists)
+        XCTAssertTrue(waitForElement(searchField))
         
-        // Verify add patient button exists
+        // Wait for and verify add patient button
         let addButton = app.buttons["Add Patient"]
-        XCTAssertTrue(addButton.exists)
+        XCTAssertTrue(waitForElement(addButton))
     }
     
     // MARK: - Patient Search Bar Tests
@@ -31,78 +46,106 @@ final class ContentViewUITests: XCTestCase {
         addPatient(firstName: "TestFirst1", lastName: "TestLast1")
         addPatient(firstName: "TestFirst2", lastName: "TestLast2")
         
-        // Test filtering
+        // Wait for and interact with search field
         let searchField = app.textFields["Search"]
+        XCTAssertTrue(waitForElement(searchField))
         searchField.tap()
         searchField.typeText("TestLast1")
         
-        // Verify only TestLast1 is visible
-        XCTAssertTrue(app.staticTexts["TestLast1, TestFirst1"].exists)
-        XCTAssertFalse(app.staticTexts["TestLast2, TestFirst2"].exists)
+        // Wait for filtered results
+        let patient1Text = app.staticTexts["TestLast1, TestFirst1"]
+        let patient2Text = app.staticTexts["TestLast2, TestFirst2"]
+        XCTAssertTrue(waitForElement(patient1Text))
+        XCTAssertFalse(patient2Text.exists)
     }
     
     // MARK: - Add Patient Tests
     
     func testAddPatientFlow() throws {
-        // Tap add patient button
-        app.buttons["Add Patient"].tap()
+        // Tap add patient button after waiting
+        let addButton = app.buttons["Add Patient"]
+        XCTAssertTrue(waitForElement(addButton))
+        addButton.tap()
         
-        // Verify add patient sheet is presented
-        XCTAssertTrue(app.textFields["First Name"].exists)
-        XCTAssertTrue(app.textFields["Last Name"].exists)
-        XCTAssertTrue(app.textFields["Height (cm)"].exists)
-        XCTAssertTrue(app.textFields["Weight (kg)"].exists)
-        XCTAssertTrue(app.staticTexts["Birth Date"].exists)
-        XCTAssertTrue(app.staticTexts["Blood Type"].exists)
-        
-        // Fill First Name
+        // Wait for and verify add patient sheet elements
         let firstNameField = app.textFields["First Name"]
+        let lastNameField = app.textFields["Last Name"]
+        let heightField = app.textFields["Height (cm)"]
+        let weightField = app.textFields["Weight (kg)"]
+        let birthDateText = app.staticTexts["Birth Date"]
+        let bloodTypeText = app.staticTexts["Blood Type"]
+        
+        XCTAssertTrue(waitForElement(firstNameField))
+        XCTAssertTrue(waitForElement(lastNameField))
+        XCTAssertTrue(waitForElement(heightField))
+        XCTAssertTrue(waitForElement(weightField))
+        XCTAssertTrue(waitForElement(birthDateText))
+        XCTAssertTrue(waitForElement(bloodTypeText))
+        
+        // Fill form fields
         firstNameField.tap()
         firstNameField.typeText("Test")
         
-        // Fill Last Name
-        let lastNameField = app.textFields["Last Name"]
         lastNameField.tap()
         lastNameField.typeText("Patient")
         
-        // Fill Birth Date
+        // Wait for and interact with date picker
         let datePicker = app.datePickers["Birth Date"]
+        XCTAssertTrue(waitForElement(datePicker))
         datePicker.tap()
-        app.staticTexts["20"].tap()
-        app.staticTexts["January 2025"].tap()
-        app.pickerWheels.element(boundBy: 0).adjust(toPickerWheelValue: "May")
-        app.pickerWheels.element(boundBy: 1).adjust(toPickerWheelValue: "2002")
-        app.buttons["PopoverDismissRegion"].tap()
         
-        // Fill Height
-        let heightField = app.textFields["Height (cm)"]
+        let dayButton = app.staticTexts["20"]
+        XCTAssertTrue(waitForElement(dayButton))
+        dayButton.tap()
+        
+        let monthYearButton = app.staticTexts["January 2025"]
+        XCTAssertTrue(waitForElement(monthYearButton))
+        monthYearButton.tap()
+        
+        let monthWheel = app.pickerWheels.element(boundBy: 0)
+        let yearWheel = app.pickerWheels.element(boundBy: 1)
+        XCTAssertTrue(waitForElement(monthWheel))
+        XCTAssertTrue(waitForElement(yearWheel))
+        
+        monthWheel.adjust(toPickerWheelValue: "May")
+        yearWheel.adjust(toPickerWheelValue: "2002")
+        
+        let dismissRegion = app.buttons["PopoverDismissRegion"]
+        XCTAssertTrue(waitForElement(dismissRegion))
+        dismissRegion.tap()
+        
+        // Fill remaining fields
         heightField.tap()
         heightField.typeText("170")
         
-        // Fill Weight
-        let weightField = app.textFields["Weight (kg)"]
         weightField.tap()
         weightField.typeText("70")
         
         // Save patient
-        app.buttons["Save"].tap()
+        let saveButton = app.buttons["Save"]
+        XCTAssertTrue(waitForElement(saveButton))
+        saveButton.tap()
         
-        // Verify patient appears in list
-        XCTAssertTrue(app.staticTexts["Patient, Test"].exists)
-        XCTAssertTrue(app.staticTexts["Age: 22"].exists)
+        // Wait for and verify patient in list
+        let patientNameText = app.staticTexts["Patient, Test"]
+        let patientAgeText = app.staticTexts["Age: 22"]
+        XCTAssertTrue(waitForElement(patientNameText))
+        XCTAssertTrue(waitForElement(patientAgeText))
     }
     
     // MARK: - Navigation Tests
     
     func testPatientDetailNavigation() throws {
-        // Add a test patient
         addPatient(firstName: "TestFirst", lastName: "TestLast")
         
-        // Tap on patient row
-        app.staticTexts["TestLast, TestFirst"].tap()
+        // Wait for and tap patient row
+        let patientRow = app.staticTexts["TestLast, TestFirst"]
+        XCTAssertTrue(waitForElement(patientRow))
+        patientRow.tap()
         
-        // Verify navigation to detail view
-        XCTAssertTrue(app.navigationBars["Patient Details"].exists)
+        // Wait for and verify navigation
+        let detailNavBar = app.navigationBars["Patient Details"]
+        XCTAssertTrue(waitForElement(detailNavBar))
     }
     
     // MARK: - Medication Tests
@@ -110,73 +153,98 @@ final class ContentViewUITests: XCTestCase {
     func testAddMedication() throws {
         addPatient(firstName: "TestFirst", lastName: "TestLast")
         
-        // Navigate to the TestFirst TestLast medications view
-        app.staticTexts["TestLast, TestFirst"].tap()
-        app.staticTexts["Medications"].tap()
+        // Navigate to medications view
+        let patientRow = app.staticTexts["TestLast, TestFirst"]
+        XCTAssertTrue(waitForElement(patientRow))
+        patientRow.tap()
         
-        // Open the Add Medication Form
-        app.buttons["Add Medication"].tap()
+        let medicationsText = app.staticTexts["Medications"]
+        XCTAssertTrue(waitForElement(medicationsText))
+        medicationsText.tap()
         
-        // Type Medication Name
+        // Wait for and tap add medication button
+        let addMedButton = app.buttons["Add Medication"]
+        XCTAssertTrue(waitForElement(addMedButton))
+        addMedButton.tap()
+        
+        // Wait for and fill medication form
         let medicationNameField = app.textFields["Medication Name"]
+        let medicationDoseField = app.textFields["Medication Dose"]
+        let medicationRouteField = app.textFields["Medication Route"]
+        let medicationFrequencyField = app.textFields["Medication Frequency"]
+        let medicationDurationField = app.textFields["Medication Duration"]
+        
+        XCTAssertTrue(waitForElement(medicationNameField))
+        XCTAssertTrue(waitForElement(medicationDoseField))
+        XCTAssertTrue(waitForElement(medicationRouteField))
+        XCTAssertTrue(waitForElement(medicationFrequencyField))
+        XCTAssertTrue(waitForElement(medicationDurationField))
+        
         medicationNameField.tap()
         medicationNameField.typeText("Test Medication")
         
-        // Type Medication Dose
-        let medicationDoseField = app.textFields["Medication Dose"]
         medicationDoseField.tap()
         medicationDoseField.typeText("Test Dose")
         
-        // Type Medication Route
-        let medicationRouteField = app.textFields["Medication Route"]
         medicationRouteField.tap()
         medicationRouteField.typeText("Test Route")
         
-        // Type Medication Frequency
-        let medicationFrequencyField = app.textFields["Medication Frequency"]
         medicationFrequencyField.tap()
         medicationFrequencyField.typeText("Test Frequency")
         
-        // Type Medication Duration
-        let medicationDurationField = app.textFields["Medication Duration"]
         medicationDurationField.tap()
         medicationDurationField.typeText("Test Duration")
         
-        // Save Medication
-        app.buttons["Save"].tap()
+        // Save medication
+        let saveButton = app.buttons["Save"]
+        XCTAssertTrue(waitForElement(saveButton))
+        saveButton.tap()
         
-        // Check that the medication is on screen
-        XCTAssertTrue(app.staticTexts["ONGOING MEDICATIONS"].exists)
-        XCTAssertTrue(app.staticTexts["Test Medication"].exists)
-        XCTAssertTrue(app.staticTexts["Dose: Test Dose"].exists)
-        XCTAssertTrue(app.staticTexts["Freq: Test Frequency"].exists)
-        XCTAssertTrue(app.staticTexts["Duration: Test Duration"].exists)
+        // Wait for and verify medication details
+        let ongoingMedsText = app.staticTexts["ONGOING MEDICATIONS"]
+        let medNameText = app.staticTexts["Test Medication"]
+        let medDoseText = app.staticTexts["Dose: Test Dose"]
+        let medFreqText = app.staticTexts["Freq: Test Frequency"]
+        let medDurationText = app.staticTexts["Duration: Test Duration"]
+        
+        XCTAssertTrue(waitForElement(ongoingMedsText))
+        XCTAssertTrue(waitForElement(medNameText))
+        XCTAssertTrue(waitForElement(medDoseText))
+        XCTAssertTrue(waitForElement(medFreqText))
+        XCTAssertTrue(waitForElement(medDurationText))
     }
     
     func addPatient(firstName: String, lastName: String) {
-        app.buttons["Add Patient"].tap()
+        let addButton = app.buttons["Add Patient"]
+        XCTAssertTrue(waitForElement(addButton))
+        addButton.tap()
         
-        // Fill First Name
+        // Wait for and fill form fields
         let firstNameField = app.textFields["First Name"]
+        let lastNameField = app.textFields["Last Name"]
+        let heightField = app.textFields["Height (cm)"]
+        let weightField = app.textFields["Weight (kg)"]
+        
+        XCTAssertTrue(waitForElement(firstNameField))
+        XCTAssertTrue(waitForElement(lastNameField))
+        XCTAssertTrue(waitForElement(heightField))
+        XCTAssertTrue(waitForElement(weightField))
+        
         firstNameField.tap()
         firstNameField.typeText(firstName)
         
-        // Fill Last Name
-        let lastNameField = app.textFields["Last Name"]
         lastNameField.tap()
         lastNameField.typeText(lastName)
         
-        // Fill Height
-        let heightField = app.textFields["Height (cm)"]
         heightField.tap()
         heightField.typeText("170")
         
-        // Fill Weight
-        let weightField = app.textFields["Weight (kg)"]
         weightField.tap()
         weightField.typeText("70")
         
         // Save patient
-        app.buttons["Save"].tap()
+        let saveButton = app.buttons["Save"]
+        XCTAssertTrue(waitForElement(saveButton))
+        saveButton.tap()
     }
 }
