@@ -86,11 +86,16 @@ struct AddMedicationView: View {
         NavigationView {
             Form {
                 TextField("Name", text: $name)
+                    .accessibilityIdentifier("Medication Name")
                     .autocapitalization(.words)
                 TextField("Dose", text: $dose)
+                    .accessibilityIdentifier("Medication Dose")
                 TextField("Route", text: $route)
+                    .accessibilityIdentifier("Medication Route")
                 TextField("Frequency", text: $frequency)
+                    .accessibilityIdentifier("Medication Frequency")
                 TextField("Duration", text: $duration)
+                    .accessibilityIdentifier("Medication Duration")
 
                 // Display error message
                 if let errorMessage = errorMessage {

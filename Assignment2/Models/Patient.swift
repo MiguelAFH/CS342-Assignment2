@@ -96,7 +96,4 @@ struct Patient: Identifiable {
     }
 }
 
-@Observable
-class Patients {
-    var patientsList: [Patient] = []
-}
+
