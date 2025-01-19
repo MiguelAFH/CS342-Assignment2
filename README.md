@@ -64,9 +64,17 @@ This form allows you to add a new medication while checking that there is no ong
 
 ## Unit tests
 
+The unit tests aew for the models in this project: Patient, BloodType and Medication.
+
 * [Assignment2Tests](https://github.com/MiguelAFH/CS342-Assignment2/tree/main/Assignment2Tests)
 
 ## UI Tests
+
+The UI tests check the following aspects of the application:
+* Adding a patient
+* Navigation to a patient details view
+* Filtering patients by last name
+* Adding a patient and a medication
 
 * [ContentViewUITests](https://github.com/MiguelAFH/CS342-Assignment2/blob/main/Assignment2UITests/ContentViewUITests.swift)
 
