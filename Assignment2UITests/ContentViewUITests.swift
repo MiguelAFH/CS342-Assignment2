@@ -51,6 +51,8 @@ final class ContentViewUITests: XCTestCase {
         XCTAssertTrue(waitForElement(searchField))
         searchField.tap()
         searchField.typeText("TestLast1")
+        app.keyboards.buttons["Return"].tap()
+        
         
         // Wait for filtered results
         let patient1Text = app.staticTexts["TestLast1, TestFirst1"]

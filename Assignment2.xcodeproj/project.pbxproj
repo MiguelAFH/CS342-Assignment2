@@ -27,6 +27,7 @@
 		494D0EBC2D3612EE00EFDD41 /* Assignment2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Assignment2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		494D0ECC2D3612F100EFDD41 /* Assignment2Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Assignment2Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		494D0ED62D3612F100EFDD41 /* Assignment2UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Assignment2UITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		49880DF02D3CBDA7004AFC2B /* Assignment2.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = Assignment2.xctestplan; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -75,6 +76,7 @@
 		494D0EB32D3612EE00EFDD41 = {
 			isa = PBXGroup;
 			children = (
+				49880DF02D3CBDA7004AFC2B /* Assignment2.xctestplan */,
 				494D0EBE2D3612EE00EFDD41 /* Assignment2 */,
 				494D0ECF2D3612F100EFDD41 /* Assignment2Tests */,
 				494D0ED92D3612F100EFDD41 /* Assignment2UITests */,
