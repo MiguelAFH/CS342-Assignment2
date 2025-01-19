@@ -57,7 +57,7 @@ This view shows all the ongoning and past medications in two sections.
 This form allows you to add a new medication while checking that there is no ongoing medication with the same name. If that is the case, it will not let you add the medication.
 
 ### Files Implementing this view
-* [AddMedicationView](https://github.com/MiguelAFH/CS342-Assignment2/blob/main/Assignment2/Views/AddMedicationView.swift)
+* [AddMedicationView.swift](https://github.com/MiguelAFH/CS342-Assignment2/blob/main/Assignment2/Views/AddMedicationView.swift)
 
 ### Screenshots
 <img src="https://github.com/MiguelAFH/CS342-Assignment2/blob/main/screenshots/AddMedication1.png" width="100"> <img src="https://github.com/MiguelAFH/CS342-Assignment2/blob/main/screenshots/AddMedication2.png" width="100"> <img src="https://github.com/MiguelAFH/CS342-Assignment2/blob/main/screenshots/AddMedication3.png" width="100">
